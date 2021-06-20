@@ -1,0 +1,14 @@
+#header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.intro{
+    text-align: center;
+}
+button {
+    background-color: blueviolet;
+    color: white;
+    border-radius: 15%;
+    font-size: 18px;
+}

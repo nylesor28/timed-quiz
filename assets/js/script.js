@@ -1,4 +1,9 @@
-var timeRemaining = 10; // todo: make dynamic
+var headerEl = document.querySelector("#header");
+var containerEl = document.querySelector(".container");
+var spanTimeEl;
+
+
+var timeRemaining = 0;
 var questionIndex = 0;
 const questionBank = [
     {"q" : "Inside which HTML element do we put the JavaScript?",
@@ -67,12 +72,12 @@ var isCorrectAnswer = function(questNum, respNum){
 var timerCountDown = function () {
 
     var clock = setInterval(function(){
-        console.log("Time Remaining: " , timeRemaining); // TODO : Write Time Remaining to HTML PAGE
+        spanTimeEl.textContent= timeRemaining;
         if (timeRemaining <=0 ){
             timeRemaining = 0;
             clearInterval(clock);
         }
-        timeRemaining --; 
+       Math.max(0, timeRemaining--); 
      
     },1000)
 }
@@ -80,7 +85,7 @@ var timerCountDown = function () {
 /********************************************************************
  * saveHighScore Saves the highscore  into local Storage
  * ******************************************************************/ 
-saveHighScore = function(){
+var saveHighScore = function(){
     highScoreArr.push(playerInfo);
     localStorage.setItem("highScore", JSON.stringify(highScoreArr));
 }
@@ -89,12 +94,56 @@ saveHighScore = function(){
  * getHighScore Retrieves highScore key/value from local storage
  * ******************************************************************/ 
 
-getHighScore = function() {
+var getHighScore = function() {
     highScoreArr = JSON.parse(localStorage.getItem("highScore")) || [];
     console.log("Parsed High Score Array: " , highScoreArr );
 }
 
+var startQuiz = function(){
+   timeRemaining= questionBank.length*15;
+    timerCountDown();
+}
 
+
+var loadScreen = function(){
+    var divHighScoreEl = document.createElement("div");
+    var aHighScoreEl = document.createElement("a");
+    aHighScoreEl.textContent ="View High Scores";
+    aHighScoreEl.setAttribute("href","./highScore.html");
+    divHighScoreEl.appendChild(aHighScoreEl);
+
+    headerEl.appendChild(divHighScoreEl);
+
+    var divTimeEl = document.createElement("div");
+    divTimeEl.textContent = "Time Remaining: ";
+
+    spanTimeEl = document.createElement("span");
+    spanTimeEl.textContent = timeRemaining;
+
+    divTimeEl.appendChild(spanTimeEl);
+    headerEl.appendChild(divTimeEl);
+
+    var divIntroEl = document.createElement("div");
+    var h2IntroEl = document.createElement("h2")
+    var pIntroEl = document.createElement("p");
+    divIntroEl.setAttribute("class", "intro")
+    h2IntroEl.textContent= "Coding Quiz Challenge"
+    divIntroEl.appendChild(h2IntroEl)
+    pIntroEl.textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that the incorrect answers will penalize your score/time by ten seconds!";
+    divIntroEl.appendChild(pIntroEl);
+
+    var btnEl = document.createElement("button");
+    btnEl.textContent="Start Quiz"
+    divIntroEl.appendChild(btnEl);
+    
+    containerEl.appendChild(divIntroEl);
+
+    btnEl.addEventListener("click", startQuiz);
+
+}
+
+
+loadScreen();
 
 saveHighScore();
 timerCountDown();
