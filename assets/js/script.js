@@ -9,6 +9,7 @@ var divIntroEl;
 var divScoreEl;
 var divElForm;
 
+
 var clock;
 var timeRemaining = 0;
 const questionValue = 10;
@@ -72,7 +73,7 @@ var saveHighScore = function () {
 };
 
 /******************************************************************
- *
+ * GameOver Function stops the clock and get users initials
  ******************************************************************/
 
 var gameOver = function () {
@@ -115,9 +116,7 @@ var gameOver = function () {
     divElForm.appendChild(inputElement);
     divElForm.appendChild(btnElement);
     divElQuestionContainer.replaceWith(divElForm);
-  } else {
-    console.log("exists");
-  }
+  } 
 };
 
 /********************************************************************************
@@ -139,8 +138,14 @@ var checkAnswer = function (event) {
   var dataQuestionsId = parseInt(targetEl.getAttribute("data-questions-id"));
   var dataOptionsId = parseInt(targetEl.getAttribute("id"));
   var isCorrect = false;
-  var pElValidator = document.createElement("p");
-  pElValidator.setAttribute("class", "validator-content");
+
+  
+  var pElValidator = document.querySelector(".validator-content")
+  if(!pElValidator){
+    pElValidator = document.createElement("p");
+         pElValidator.setAttribute("class", "validator-content");
+         divElQuestionContainer.appendChild(pElValidator);
+        }
 
   isCorrect = isCorrectAnswer(dataQuestionsId, dataOptionsId);
 
@@ -153,8 +158,10 @@ var checkAnswer = function (event) {
   questionIndex++;
   loadQuestions();
 
-  divElQuestionContainer.appendChild(pElValidator);
+
 };
+
+
 
 /********************************************************************
  * Load the Next Question from the Bank onto the screen
@@ -200,6 +207,8 @@ var loadQuestions = function () {
   divElQuestionContainer.appendChild(divElQuestion);
 
   containerEl.appendChild(divElQuestionContainer);
+
+
 };
 
 /********************************************************************
