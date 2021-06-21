@@ -1,3 +1,6 @@
+const highScoreLink = "./highScore.html";
+const homepage = "./index.html";
+var highScoreList = document.querySelector(".high-score-list");
 var headerEl = document.querySelector("#header");
 var containerEl = document.querySelector(".container");
 var spanTimeEl;
@@ -61,6 +64,10 @@ var highScoreArr = [];
  * ******************************************************************/
 var saveHighScore = function () {
   highScoreArr.push(playerInfo);
+  highScoreArr.sort(function(p1, p2){
+      return p2.score - p1.score;
+
+  })
   localStorage.setItem("highScore", JSON.stringify(highScoreArr));
 };
 
@@ -210,14 +217,6 @@ var timerCountDown = function () {
   }, 1000);
 };
 
-/********************************************************************
- * getHighScore Retrieves highScore key/value from local storage
- * ******************************************************************/
-
-var getHighScore = function () {
-  highScoreArr = JSON.parse(localStorage.getItem("highScore")) || [];
-  console.log("Parsed High Score Array: ", highScoreArr);
-};
 
 var startQuiz = function () {
   divIntroEl.remove();
@@ -225,12 +224,23 @@ var startQuiz = function () {
   loadQuestions();
 };
 
+/********************************************************************
+ * getHighScore Retrieves highScore key/value from local storage
+ * ******************************************************************/
+
+ var getHighScores = function () {
+     highScoreArr = JSON.parse(localStorage.getItem("highScore")) || [];
+    return highScoreArr;
+  
+  };
+
 var loadScreen = function () {
   timeRemaining = questionBank.length * questionValue;
+  getHighScores();
   var divHighScoreEl = document.createElement("div");
   var aHighScoreEl = document.createElement("a");
   aHighScoreEl.textContent = "View High Scores";
-  aHighScoreEl.setAttribute("href", "./highScore.html");
+  aHighScoreEl.setAttribute("href", highScoreLink);
   divHighScoreEl.appendChild(aHighScoreEl);
 
   headerEl.appendChild(divHighScoreEl);
@@ -263,6 +273,8 @@ var loadScreen = function () {
   btnEl.addEventListener("click", startQuiz);
 };
 
+
+
 loadScreen();
 
-saveHighScore();
+

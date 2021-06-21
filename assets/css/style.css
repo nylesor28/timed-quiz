@@ -5,6 +5,9 @@
 
 .intro{
     text-align: center;
+    font-size: 20px;
+    width: 70%;
+    margin: auto;
 }
 button {
     background-color: blueviolet;
@@ -13,10 +16,10 @@ button {
     font-size: 24px;
 }
 
-.questionContainer{
-  
+.container{
+    
     width: 80%;
-    margin: auto;
+    margin: auto; 
 }
 
  .questionContainer p{
@@ -30,7 +33,7 @@ button {
     flex-direction: column;
 }
 .btn-choice{
-   
+    align-self: flex-start;
     text-align: left;
     margin: 1%;
 
@@ -41,4 +44,31 @@ button {
     font-style: italic;
     font-size: 18px;
     border-top: 2px solid gray;
+}
+
+.high-score-list li:nth-child(odd) { 
+    background: blueviolet; 
+  } 
+
+.highScore{
+
+    margin-top:5%;
+    text-align: center;
+    
+}
+
+.high-score-list-wrapper{
+    margin-left: auto;
+}
+.high-score-list{
+    display: flex;
+    flex-direction: column;
+    
+
+}
+
+.high-score-list li{
+   align-self: start;
+    
+
 }
