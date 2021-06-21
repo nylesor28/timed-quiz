@@ -76,7 +76,6 @@ var saveHighScore = function () {
  ******************************************************************/
 
 var gameOver = function () {
-  //TODO: Add Gave Over Store in local Storage
   clearInterval(clock);
   var labelEl;
 
@@ -211,7 +210,7 @@ var timerCountDown = function () {
     Math.max(0, timeRemaining--);
     spanTimeEl.textContent = timeRemaining;
     if (timeRemaining <= 0) {
-      timeRemaining = 0;
+      gameOver();
       clearInterval(clock);
     }
   }, 1000);

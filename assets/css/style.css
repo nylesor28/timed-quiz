@@ -16,6 +16,10 @@ button {
     font-size: 24px;
 }
 
+button:hover {
+    opacity: 0.75;
+}
+
 .container{
     
     width: 80%;

@@ -20,15 +20,15 @@ THEN I can save my initials and score
 ```
 ## Links
 
-* **Password Generator Page:** <https://nylesor28.github.io/timed-quiz/> 
+* **Timed Quiz Page:** <https://nylesor28.github.io/timed-quiz/> 
 * **Github Repo:** <https://github.com/nylesor28/timed-quiz>
 
 
 ## Focused Languages
-* JavaScript
+* HTML, CSS, JavaScript
 
 ## Starter Code
 No Starter Code used for this challenge
 
  ## Final Product
-![Screen Print for Reference of Timed Quiz](/assets/images/password-generator.png)
+![Screen Print for Reference of Timed Quiz](/assets/images/timed-quiz.png)
