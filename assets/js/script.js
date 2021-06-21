@@ -1,9 +1,10 @@
 var headerEl = document.querySelector("#header");
 var containerEl = document.querySelector(".container");
 var spanTimeEl;
-var divQuestionEl = null;
+var divElQuestionContainer;
 var divIntroEl;
 var divScoreEl;
+var divElForm;
 
 var clock;
 var timeRemaining = 0;
@@ -58,118 +59,156 @@ var highScoreArr = [];
 /********************************************************************
  * saveHighScore Saves the highscore  into local Storage
  * ******************************************************************/
- var saveHighScore = function () {
-    highScoreArr.push(playerInfo);
-    localStorage.setItem("highScore", JSON.stringify(highScoreArr));
-  };
+var saveHighScore = function () {
+  highScoreArr.push(playerInfo);
+  localStorage.setItem("highScore", JSON.stringify(highScoreArr));
+};
 
 /******************************************************************
- * 
+ *
  ******************************************************************/
 
-var gameOver = function(){
-    //TODO: Add Gave Over Store in local Storage
-}
+var gameOver = function () {
+  //TODO: Add Gave Over Store in local Storage
+  clearInterval(clock);
+  var labelEl;
 
+  if (!divElForm) {
+    divElForm = document.createElement("div");
+    divElForm.setAttribute("class", "high-score-form");
+    var h1El = document.createElement("h1");
+    h1El.textContent = "All Done!";
+    var pEl = document.createElement("p");
+    pEl.textContent = "Your Final Score is: " + timeRemaining;
+    labelEl = document.createElement("label");
+    labelEl.textContent = "Enter Initials";
+    labelEl.setAttribute("for", "player-name");
+    var inputElement = document.createElement("input");
+    inputElement.type = "text";
+    inputElement.name = "player-name";
+    inputElement.setAttribute("id", "player-name");
+
+    var btnElement = document.createElement("button");
+    btnElement.setAttribute("id", "playerNameButton");
+    btnElement.textContent = "Submit";
+    btnElement.addEventListener("click", function () {
+      var playerName = document.querySelector("#player-name").value;
+      if (!playerName) {
+        alert("Please Enter a Valid Name");
+      } else {
+        playerInfo.name = playerName;
+        playerInfo.score = timeRemaining;
+        saveHighScore();
+        window.location.href = highScoreLink;
+      }
+    });
+
+    divElForm.appendChild(h1El);
+    divElForm.appendChild(pEl);
+    divElForm.appendChild(labelEl);
+    divElForm.appendChild(inputElement);
+    divElForm.appendChild(btnElement);
+    divElQuestionContainer.replaceWith(divElForm);
+  } else {
+    console.log("exists");
+  }
+};
 
 /********************************************************************************
  * check if the response provided matches the correct answer in the question bank
  * Returns true if there is a match, false otherwise
  ***********************************************************************************/
- var isCorrectAnswer = function (questNum, respNum) {
-    var question = questionBank[questNum];
-    return respNum === question.a;
-  };
+var isCorrectAnswer = function (questNum, respNum) {
+  var question = questionBank[questNum];
+  return respNum === question.a;
+};
 
-var checkAnswer = function(event) {
-    var targetEl = event.target
-    console.log(targetEl);
-    if(!targetEl.matches(".btn-choice")){
-        return;
-    }
-    var dataQuestionsId = parseInt(targetEl.getAttribute("data-questions-id"));
-    var dataOptionsId = parseInt(targetEl.getAttribute("id"))
-    var isCorrect = false;
-    var pElValidator = document.createElement("p")
-    pElValidator.setAttribute("class", "validator-content")
+var checkAnswer = function (event) {
+  var targetEl = event.target;
 
-   
-   isCorrect = isCorrectAnswer(dataQuestionsId, dataOptionsId)
+  //TODO: document.querySelector(".validator-content").remove();
+  if (!targetEl.matches(".btn-choice")) {
+    return;
+  }
+  var dataQuestionsId = parseInt(targetEl.getAttribute("data-questions-id"));
+  var dataOptionsId = parseInt(targetEl.getAttribute("id"));
+  var isCorrect = false;
+  var pElValidator = document.createElement("p");
+  pElValidator.setAttribute("class", "validator-content");
 
-   if(isCorrect){
-        pElValidator.textContent = "Correct!"
-   }
-   else {
-       pElValidator.textContent = "Wrong!"
-       timeRemaining -= questionValue;
-   }
+  isCorrect = isCorrectAnswer(dataQuestionsId, dataOptionsId);
 
-   divQuestionEl.appendChild(pElValidator);
-   questionIndex++;
-   loadQuestions();
+  if (isCorrect) {
+    pElValidator.textContent = "Correct!";
+  } else {
+    pElValidator.textContent = "Wrong!";
+    timeRemaining -= questionValue;
+  }
+  questionIndex++;
+  loadQuestions();
 
-}
-
+  divElQuestionContainer.appendChild(pElValidator);
+};
 
 /********************************************************************
  * Load the Next Question from the Bank onto the screen
  ********************************************************************/
 var loadQuestions = function () {
+  if (questionIndex >= questionBank.length) {
+    gameOver();
+    return;
+  }
   var question = questionBank[questionIndex];
   var pQuestionEl;
+  var divElQuestion;
 
-  // TODO: check if index is less than question index
-  console.log(divQuestionEl);
-  if (!divQuestionEl) {
-    divQuestionEl = document.createElement("div");
-    divQuestionEl.setAttribute("class", "questionContainer ");
+  if (!divElQuestionContainer) {
+    divElQuestionContainer = document.createElement("div");
+    divElQuestionContainer.setAttribute("class", "questionContainer ");
+    divElQuestion = document.createElement("div");
+    divElQuestion.setAttribute("class", "question");
   } else {
-    divQuestionEl = document.querySelector(".questionContainer");
+    divElQuestionContainer = document.querySelector(".questionContainer");
+    divElQuestion = document.querySelector(".question");
+    divElQuestion.innerHTML = "";
   }
- 
 
   var pQuestionEl = document.createElement("p");
   pQuestionEl.textContent = question.q;
   var divBtnEl = document.createElement("div");
-  divBtnEl.setAttribute("class","optionsContainer")
+  divBtnEl.setAttribute("class", "optionsContainer");
 
-
-  
   for (var j = 0; j < question.o.length; j++) {
     var btnElOptions = document.createElement("button");
-    btnElOptions.textContent = "" + (j+1) + ". " + question.o[j];
-    btnElOptions.setAttribute("id", j )
-    btnElOptions.setAttribute("class", "btn-choice")
+    btnElOptions.textContent = "" + (j + 1) + ". " + question.o[j];
+    btnElOptions.setAttribute("id", j);
+    btnElOptions.setAttribute("class", "btn-choice");
     btnElOptions.setAttribute("data-questions-id", questionIndex);
-    btnElOptions.addEventListener("click", checkAnswer)
-    
+    btnElOptions.addEventListener("click", checkAnswer);
+
     divBtnEl.appendChild(btnElOptions);
   }
 
-  divQuestionEl.appendChild(pQuestionEl);
-  divQuestionEl.appendChild(divBtnEl);
+  divElQuestion.appendChild(pQuestionEl);
+  divElQuestion.appendChild(divBtnEl);
+  divElQuestionContainer.appendChild(divElQuestion);
 
-  containerEl.appendChild(divQuestionEl);
+  containerEl.appendChild(divElQuestionContainer);
 };
-
-
 
 /********************************************************************
  * TimerCountDown reduces the time remaining aftter every second
  *******************************************************************/
 var timerCountDown = function () {
-    
-    clock = setInterval(function () {
+  clock = setInterval(function () {
+    Math.max(0, timeRemaining--);
     spanTimeEl.textContent = timeRemaining;
     if (timeRemaining <= 0) {
       timeRemaining = 0;
       clearInterval(clock);
     }
-    Math.max(0, timeRemaining--);
   }, 1000);
 };
-
-
 
 /********************************************************************
  * getHighScore Retrieves highScore key/value from local storage
@@ -181,13 +220,13 @@ var getHighScore = function () {
 };
 
 var startQuiz = function () {
-  timeRemaining = questionBank.length * questionValue;
   divIntroEl.remove();
   timerCountDown();
   loadQuestions();
 };
 
 var loadScreen = function () {
+  timeRemaining = questionBank.length * questionValue;
   var divHighScoreEl = document.createElement("div");
   var aHighScoreEl = document.createElement("a");
   aHighScoreEl.textContent = "View High Scores";
