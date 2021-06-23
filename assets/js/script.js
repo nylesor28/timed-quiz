@@ -1,4 +1,4 @@
-const highScoreLink = "./highScore.html";
+const highScoreLink = "./highscore.html";
 const homepage = "./index.html";
 var highScoreList = document.querySelector(".high-score-list");
 var headerEl = document.querySelector("#header");
